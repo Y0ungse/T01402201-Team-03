@@ -1,0 +1,58 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class icicle : MonoBehaviour
+{
+    [SerializeField]
+    private float senseTime;
+
+    private Transform playerTransform;
+    Vector3 whereToAtk;
+    public GameObject warning;
+    public GameObject obstacle;
+
+    void Start()
+    {
+        StartCoroutine(countTime(10f));
+    }
+
+    IEnumerator Sense()
+    {
+        for(int i = 0; i < senseTime; i++)
+        {
+            playerTransform = GameObject.FindGameObjectWithTag("Player").transform;
+        }
+        yield return null;
+        StartCoroutine("Warning");
+    }
+    IEnumerator Warning()
+    {
+        if (playerTransform != null)
+        {
+            whereToAtk = playerTransform.position;
+            GameObject warningObject = Instantiate(warning, whereToAtk, transform.rotation);
+            yield return new WaitForSeconds(3f);
+            DestroyImmediate(warningObject);
+            StartCoroutine("Attack");
+        }
+    }
+    IEnumerator Attack()
+    {
+        GameObject attackObject = Instantiate(obstacle, whereToAtk, transform.rotation);
+        yield return new WaitForSeconds(2f);
+        DestroyImmediate(attackObject);
+    }
+    IEnumerator countTime(float coolTime)
+    {
+        StartCoroutine(Sense());
+        yield return new WaitForSeconds(coolTime);
+        StartCoroutine(countTime(10f));
+    }
+
+    /*private void OnDestroy()
+    {
+        if() //player와 충돌 시
+        else if() //일정 시간이 지나면
+    }*/
+}
