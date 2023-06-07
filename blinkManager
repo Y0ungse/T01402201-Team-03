@@ -1,0 +1,27 @@
+using UnityEngine;
+
+public class blinkManager : MonoBehaviour
+{
+    public float blinkInterval = 0.3f; 
+
+    private float timer;
+    private Renderer objectRenderer;
+
+    private void Start()
+    {
+        objectRenderer = GetComponent<Renderer>();
+        timer = 0f;
+    }
+
+    private void Update()
+    {
+        timer += Time.deltaTime;
+
+        // blinkInterval 간격마다 오브젝트 활성화/비활성화
+        if (timer >= blinkInterval)
+        {
+            objectRenderer.enabled = !objectRenderer.enabled;
+            timer = 0f;
+        }
+    }
+}
