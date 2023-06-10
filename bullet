@@ -1,0 +1,41 @@
+using UnityEngine;
+
+public class bullet : MonoBehaviour
+{
+    public GameObject painter;
+    public GameObject snowman;
+    public float moveSpeed = 10f;
+
+    private float initialXPosition;
+    private float distanceTravelled;
+    private float dir = 1.0f;
+
+    private void Start()
+    {
+        painter = GameObject.Find("Painter");
+        snowman = GameObject.Find("Jake");
+        initialXPosition = snowman.transform.position.x;
+        distanceTravelled = 0f;
+        if (snowman.transform.position.x > painter.transform.position.x) dir = -1.0f;
+    }
+
+    private void Update()
+    {
+        Vector3 newPosition;
+        float moveDistance = moveSpeed * Time.deltaTime;
+        distanceTravelled += moveDistance;
+        newPosition = transform.position + new Vector3(dir * moveDistance, 0f, 0f);
+        // 총알은 x축 방향으로만 이동
+        transform.position = newPosition;
+
+        // 이동한 거리 및 x 좌표와 Player 오브젝트의 x 좌표, y 좌표 일치 여부 확인
+        bool shouldDestroy = distanceTravelled >= 30f ||
+                     (transform.position.x >= painter.transform.position.x - 0.25f && transform.position.x <= painter.transform.position.x + 0.25f) &&
+                     (transform.position.y >= painter.transform.position.y - 0.25f && transform.position.y <= painter.transform.position.y + 0.25f);
+        // 총알과 Player 오브젝트의 y 좌표 일치 시 총알 파괴
+        if (shouldDestroy)
+        {
+            Destroy(gameObject);
+        }
+    }
+}
